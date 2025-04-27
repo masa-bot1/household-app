@@ -1,7 +1,50 @@
-import { Box, Drawer } from '@mui/material'
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, Toolbar } from '@mui/material'
 import React from 'react'
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import ListItemText from '@mui/material/ListItemText';
 
-const SideBar = ({drawerWidth, mobileOpen, handleDrawerToggle}:{drawerWidth: number, mobileOpen: boolean, handleDrawerToggle: () => void}) => {
+
+interface SideBarProps {
+  drawerWidth: number,
+  mobileOpen: boolean,
+  handleDrawerClose: () => void,
+  handleDrawerTransitionEnd: () => void,
+}
+
+const SideBar = ({drawerWidth, mobileOpen, handleDrawerClose, handleDrawerTransitionEnd}: SideBarProps) => {
+  const drawer = (
+    <div>
+      <Toolbar />
+      <Divider />
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+
   return (
       <Box
         component="nav"

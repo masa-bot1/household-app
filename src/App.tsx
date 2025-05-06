@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Home from './pages/Home';
@@ -11,7 +11,6 @@ import { CssBaseline } from '@mui/material';
 import { Transaction } from './types';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
-import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
 
 function App() {

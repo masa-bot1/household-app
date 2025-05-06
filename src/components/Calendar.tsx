@@ -18,7 +18,6 @@ const Calendar = ({monthlyTransactions}: CalendarProps) => {
   ]
 
   const renderEventContent = (eventInfo: EventContentArg) => {
-    console.log(eventInfo);
     return (
       <div>
         <div className='money'id='event-income'>
@@ -37,7 +36,6 @@ const Calendar = ({monthlyTransactions}: CalendarProps) => {
   }
 
   const dailyBalances = calculateDailyBalances(monthlyTransactions);
-  console.log(dailyBalances);
 
   return (
     <FullCalendar

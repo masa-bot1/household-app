@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -23,12 +23,13 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
 import { JSX } from "@fullcalendar/core/preact";
+import { ex } from "@fullcalendar/core/internal-common";
 
 type incomeExpenseType = "income" | "expense";
 
 interface CategoryItem {
   label: IncomeCategory | ExpenseCategory;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 }
 
 interface TransactionFormProps {
@@ -59,6 +60,8 @@ const TransactionForm = ({
     { label: "お小遣い", icon: <SavingsIcon fontSize="small" /> },
   ];
 
+  const [categories, setCategories] = useState(expenseCategories);
+
   const { control, setValue, watch } = useForm({
     defaultValues: {
       type: "expense",
@@ -73,7 +76,14 @@ const TransactionForm = ({
     setValue("type", type);
   }
 
+  // 収支タイプを監視
   const currentType = watch("type");
+
+  useEffect(() => {
+    const newCategories =
+      currentType === "expense" ? expenseCategories : incomeCategories;
+      setCategories(newCategories);
+  }, [currentType]);
 
   useEffect(() => {
     setValue("date", currentDay);
@@ -169,12 +179,12 @@ const TransactionForm = ({
                 label="カテゴリ"
                 select
               >
-                <MenuItem value={"食費"}>
-                  <ListItemIcon>
-                    <FastfoodIcon />
-                  </ListItemIcon>
-                  食費
-                </MenuItem>
+                {categories.map((category) => (
+                  <MenuItem value={category.label}>
+                    <ListItemIcon>{category.icon}</ListItemIcon>
+                    {category.label}
+                  </MenuItem>
+                ))}
               </TextField>
             )}
           />

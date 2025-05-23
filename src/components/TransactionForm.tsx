@@ -24,6 +24,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
 import { JSX } from "@fullcalendar/core/preact";
 import { ex } from "@fullcalendar/core/internal-common";
+import { parse } from "path";
 
 type incomeExpenseType = "income" | "expense";
 
@@ -195,6 +196,11 @@ const TransactionForm = ({
             render={({field}) => (
               <TextField
                 {...field}
+                value={field.value === 0 ? "" : field.value}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value, 10) || 0;
+                  field.onChange(newValue);
+                }}
                 label="金額"
                 type="number"
                 slotProps={{

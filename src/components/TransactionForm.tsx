@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -22,9 +22,8 @@ import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import SavingsIcon from "@mui/icons-material/Savings";
 import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from "../types";
-import { JSX } from "@fullcalendar/core/preact";
-import { ex } from "@fullcalendar/core/internal-common";
-import { parse } from "path";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Schema, transactionSchema } from "../validations/schema";
 
 type incomeExpenseType = "income" | "expense";
 
@@ -63,7 +62,13 @@ const TransactionForm = ({
 
   const [categories, setCategories] = useState(expenseCategories);
 
-  const { control, setValue, watch } = useForm({
+  const {
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+    handleSubmit
+  } = useForm<Schema>({
     defaultValues: {
       type: "expense",
       date: currentDay,
@@ -71,7 +76,9 @@ const TransactionForm = ({
       category: "",
       content: "",
     },
+    resolver: zodResolver(transactionSchema),
   });
+console.log(errors);
 
   const incomeExpenseToggle = (type: incomeExpenseType) => {
     setValue("type", type);
@@ -90,6 +97,10 @@ const TransactionForm = ({
     setValue("date", currentDay);
   }
   , [currentDay]);
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
 
   return (
     <Box
@@ -125,7 +136,7 @@ const TransactionForm = ({
         </IconButton>
       </Box>
       {/* フォーム要素 */}
-      <Box component={"form"}>
+      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           {/* 収支切り替えボタン */}
           <Controller

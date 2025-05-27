@@ -177,6 +177,8 @@ console.log(errors);
                 slotProps={{
                   inputLabel: { shrink: true}
                 }}
+                error={!!errors.date}
+                helperText={errors.date?.message}
               />
             )}
           />
@@ -186,6 +188,8 @@ console.log(errors);
             control={control}
             render={({field}) => (
               <TextField
+                error={!!errors.category}
+                helperText={errors.category?.message}
                 {...field}
                 id="カテゴリ"
                 label="カテゴリ"
@@ -206,6 +210,8 @@ console.log(errors);
             control={control}
             render={({field}) => (
               <TextField
+                error={!!errors.amount}
+                helperText={errors.amount?.message}
                 {...field}
                 value={field.value === 0 ? "" : field.value}
                 onChange={(e) => {
@@ -228,6 +234,8 @@ console.log(errors);
             control={control}
             render={({field}) => (
               <TextField
+                error={!!errors.content}
+                helperText={errors.content?.message}
                 {...field}
                 label="内容"
                 type="text"

@@ -9,9 +9,10 @@ import { theme } from './theme/theme';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { Transaction } from './types';
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import { formatMonth } from './utils/formatting';
+import { Schema } from './validations/schema';
 
 function App() {
 
@@ -51,13 +52,33 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
+  const handleSaveTransaction = async (transaction: Schema) => {
+    try {
+      // Add a new document with a generated id.
+      const docRef = await addDoc(collection(db, "Transactions"), transaction);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (err) {
+      if(isFirestoreError(err)) {
+        console.log("firestoreのエラーは：", err);
+      } else {
+        console.log("一般的なエラーは：", err)
+      }
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home monthlyTransactions={monthlyTransactions} setCurrentMonth={setCurrentMonth} />}/>
+            <Route index element={
+              <Home
+                monthlyTransactions={monthlyTransactions}
+                setCurrentMonth={setCurrentMonth}
+                onSaveTransaction={handleSaveTransaction}
+              />
+            }/>
             <Route path="/report" element={<Report />}/>
             <Route path="*" element={<NoMatch />}/>
           </Route>

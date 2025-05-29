@@ -38,6 +38,11 @@ const Home = ({
     setIsEntryDrawerOpen(!isEntryDrawerOpen);
   }
 
+  // 取引が選択されたときの処理
+  const handleSelectTransaction = (transaction: Transaction) => {
+    setIsEntryDrawerOpen(true);
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       {/* 左側コンテンツ */}
@@ -57,6 +62,7 @@ const Home = ({
           dailyTransactions={dailyTransactions}
           currentDay={currentDay}
           onAddTransactionForm={handleAddTransactionForm}
+          onSelectTransaction={handleSelectTransaction}
         />
         <TransactionForm
           onCloseForm={closeForm}

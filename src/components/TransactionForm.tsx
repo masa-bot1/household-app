@@ -65,6 +65,7 @@ const TransactionForm = ({
   ];
 
   const [categories, setCategories] = useState(expenseCategories);
+  const [amountDisplay, setAmountDisplay] = useState<string>("");
 
   const {
     control,
@@ -90,6 +91,7 @@ console.log(errors);
     setValue("category", "");
     setValue("amount", 0);
     setValue("content", "");
+    setAmountDisplay("");
   }
 
   // 収支タイプを監視
@@ -127,6 +129,7 @@ console.log(errors);
       setValue("amount", selectedTransaction.amount);
       setValue("category", selectedTransaction.category);
       setValue("content", selectedTransaction.content);
+      setAmountDisplay(selectedTransaction.amount.toLocaleString());
     }
   }, [selectedTransaction]);
 
@@ -241,15 +244,21 @@ console.log(errors);
                 error={!!errors.amount}
                 helperText={errors.amount?.message}
                 {...field}
-                value={field.value === 0 ? "" : field.value}
+                value={amountDisplay}
                 onChange={(e) => {
-                  const newValue = parseInt(e.target.value, 10) || 0;
-                  field.onChange(newValue);
+                  // カンマを除去して数値化
+                  const raw = e.target.value.replace(/,/g, "");
+                  const num = parseInt(raw, 10) || 0;
+                  // カンマ区切りで表示
+                  setAmountDisplay(num === 0 ? "" : num.toLocaleString());
+                  // フォーム値は数値で渡す
+                  field.onChange(num);
                 }}
                 label="金額"
-                type="number"
+                type="text"
                 slotProps={{
                   input: {
+                    inputMode: "numeric",
                     startAdornment: <span>¥</span>,
                   },
                 }}

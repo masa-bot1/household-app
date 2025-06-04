@@ -31,15 +31,19 @@ const Home = ({
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
     return transaction.date === currentDay;
   });
-  console.log(dailyTransactions);
 
   const closeForm = () => {
     setIsEntryDrawerOpen(!isEntryDrawerOpen);
+    setSelectedTransaction(null);
   }
 
-  // フォームの開閉処理
+  // フォームの開閉処理（内訳追加ボタンを押したとき）
   const handleAddTransactionForm = () => {
-    setIsEntryDrawerOpen(!isEntryDrawerOpen);
+    if (selectedTransaction) {
+      setSelectedTransaction(null);
+    } else {
+      setIsEntryDrawerOpen(!isEntryDrawerOpen);
+    }
   }
 
   // 取引が選択されたときの処理

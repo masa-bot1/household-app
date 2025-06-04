@@ -120,6 +120,7 @@ console.log(errors);
       category: "",
       content: "",
     });
+    setAmountDisplay("");
   };
 
   useEffect(() => {
@@ -130,6 +131,15 @@ console.log(errors);
       setValue("category", selectedTransaction.category);
       setValue("content", selectedTransaction.content);
       setAmountDisplay(selectedTransaction.amount.toLocaleString());
+    } else {
+      reset({
+        type: "expense",
+        date: currentDay,
+        amount: 0,
+        category: "",
+        content: "",
+      })
+      setAmountDisplay("");
     }
   }, [selectedTransaction]);
 

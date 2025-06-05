@@ -38,6 +38,7 @@ interface TransactionFormProps {
   currentDay: string;
   onSaveTransaction: (transaction: Schema) => Promise<void>
   selectedTransaction: Transaction | null;
+  onDeleteTransaction: (transactionId: string) => Promise<void>;
 }
 
 const TransactionForm = ({
@@ -46,6 +47,7 @@ const TransactionForm = ({
   currentDay,
   onSaveTransaction,
   selectedTransaction,
+  onDeleteTransaction,
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -142,6 +144,12 @@ console.log(errors);
       setAmountDisplay("");
     }
   }, [selectedTransaction]);
+
+  const handleDelete = () => {
+    if (selectedTransaction) {
+      onDeleteTransaction(selectedTransaction.id);
+    }
+  }
 
   return (
     <Box
@@ -289,7 +297,7 @@ console.log(errors);
               />
             )}
           />
-          {/* 保存ボタン */}
+
           <Button
             type="submit"
             variant="contained"
@@ -298,6 +306,17 @@ console.log(errors);
           >
             保存
           </Button>
+
+          {selectedTransaction && (
+            <Button
+              onClick={handleDelete}
+              variant="outlined"
+              color={"secondary"}
+              fullWidth
+            >
+              削除
+            </Button>
+          )}
         </Stack>
       </Box>
     </Box>

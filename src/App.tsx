@@ -9,7 +9,7 @@ import { theme } from './theme/theme';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { Transaction } from './types';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import { formatMonth } from './utils/formatting';
 import { Schema } from './validations/schema';
@@ -23,7 +23,6 @@ function App() {
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -53,6 +52,7 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
+  // 取引を保存する処理
   const handleSaveTransaction = async (transaction: Schema) => {
     try {
       // Add a new document with a generated id.
@@ -76,6 +76,19 @@ function App() {
     }
   }
 
+  const handleDeleteTransaction = async (transactionId: string) => {
+    try {
+      // firestoreのデータ削除
+      await deleteDoc(doc(db, "Transactions", transactionId));
+    } catch (err) {
+      if(isFirestoreError(err)) {
+        console.log("firestoreのエラーは：", err);
+      } else {
+        console.log("一般的なエラーは：", err)
+      }
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -87,8 +100,7 @@ function App() {
                 monthlyTransactions={monthlyTransactions}
                 setCurrentMonth={setCurrentMonth}
                 onSaveTransaction={handleSaveTransaction}
-                setSelectedTransaction={setSelectedTransaction}
-                selectedTransaction={selectedTransaction}
+                onDeleteTransaction={handleDeleteTransaction}
               />
             }/>
             <Route path="/report" element={<Report />}/>

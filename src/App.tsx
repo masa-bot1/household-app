@@ -80,6 +80,10 @@ function App() {
     try {
       // firestoreのデータ削除
       await deleteDoc(doc(db, "Transactions", transactionId));
+      const filteredTransactions = transactions.filter(
+        (transaction) => transaction.id !== transactionId
+      );
+      setTransactions(filteredTransactions);
     } catch (err) {
       if(isFirestoreError(err)) {
         console.log("firestoreのエラーは：", err);

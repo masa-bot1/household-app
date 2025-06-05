@@ -39,6 +39,7 @@ interface TransactionFormProps {
   onSaveTransaction: (transaction: Schema) => Promise<void>
   selectedTransaction: Transaction | null;
   onDeleteTransaction: (transactionId: string) => Promise<void>;
+  setSelectedTransaction: React.Dispatch<React.SetStateAction<Transaction | null>>;
 }
 
 const TransactionForm = ({
@@ -48,6 +49,7 @@ const TransactionForm = ({
   onSaveTransaction,
   selectedTransaction,
   onDeleteTransaction,
+  setSelectedTransaction
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -148,6 +150,7 @@ console.log(errors);
   const handleDelete = () => {
     if (selectedTransaction) {
       onDeleteTransaction(selectedTransaction.id);
+      setSelectedTransaction(null);
     }
   }
 

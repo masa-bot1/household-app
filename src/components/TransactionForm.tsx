@@ -40,6 +40,7 @@ interface TransactionFormProps {
   selectedTransaction: Transaction | null;
   onDeleteTransaction: (transactionId: string) => Promise<void>;
   setSelectedTransaction: React.Dispatch<React.SetStateAction<Transaction | null>>;
+  onUpdateTransaction: (transaction: Schema, transactionId: string) => Promise<void>;
 }
 
 const TransactionForm = ({
@@ -49,7 +50,8 @@ const TransactionForm = ({
   onSaveTransaction,
   selectedTransaction,
   onDeleteTransaction,
-  setSelectedTransaction
+  setSelectedTransaction,
+  onUpdateTransaction
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -115,7 +117,25 @@ console.log(errors);
   // 送信処理
   const onSubmit: SubmitHandler<Schema> = (data) => {
     console.log(data);
-    onSaveTransaction(data);
+
+    if (selectedTransaction) {
+      onUpdateTransaction(data, selectedTransaction.id)
+        .then(() => {
+          console.log("更新しました");
+          setSelectedTransaction(null);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      onSaveTransaction(data)
+        .then(() => {
+          console.log("保存しました");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
     reset({
       type: "expense",
@@ -307,7 +327,7 @@ console.log(errors);
             color={currentType === "income" ? "primary" : "error"}
             fullWidth
           >
-            保存
+            {selectedTransaction ? "更新" : "保存"}
           </Button>
 
           {selectedTransaction && (

@@ -76,6 +76,7 @@ function App() {
     }
   }
 
+  // 取引を削除する処理
   const handleDeleteTransaction = async (transactionId: string) => {
     try {
       // firestoreのデータ削除
@@ -93,12 +94,17 @@ function App() {
     }
   }
 
+  // 取引を更新する処理
   const handleUpdateTransaction = async (transaction: Schema, transactionId: string) => {
     try {
       const docRef = doc(db, "Transactions", transactionId);
 
-      // Set the "capital" field of the city 'DC'
       await updateDoc(docRef, transaction);
+
+      const updatedTransactions = transactions.map((t) =>
+        t.id === transactionId ? { ...t, ...transaction } : t
+      ) as Transaction[];
+      setTransactions(updatedTransactions);
     } catch (err) {
       if(isFirestoreError(err)) {
         console.log("firestoreのエラーは：", err);

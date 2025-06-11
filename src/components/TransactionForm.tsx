@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用のアイコン
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import AlarmIcon from "@mui/icons-material/Alarm";
@@ -147,6 +147,17 @@ console.log(errors);
     setAmountDisplay("");
   };
 
+  useEffect(() => {
+    // 選択肢が更新されたか確認
+    if (selectedTransaction) {
+      const categoryExists = categories.some(
+        (category) => category.label === selectedTransaction.category
+      );
+      setValue("category", categoryExists ? selectedTransaction.category : "");
+    }
+  }, [selectedTransaction, categories]);
+
+  // フォーム内容を更新
   useEffect(() => {
     if (selectedTransaction) {
       setValue("type", selectedTransaction.type);

@@ -7,10 +7,13 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartData,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { Transaction } from '../types';
 import { calculateDailyBalances } from '../utils/financeCalculations';
+import { Box, Typography, useTheme } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 ChartJS.register(
   CategoryScale,
@@ -23,9 +26,14 @@ ChartJS.register(
 
 interface BarChartProps {
   monthlyTransactions: Transaction[];
+  isLoading: boolean;
 }
 
-const BarChart = ({ monthlyTransactions }: BarChartProps) => {
+const BarChart = ({
+  monthlyTransactions,
+  isLoading
+}: BarChartProps) => {
+  const theme = useTheme();
   const options = {
     maintainAspectRatio: false,
     responsive: true,
@@ -42,36 +50,36 @@ const BarChart = ({ monthlyTransactions }: BarChartProps) => {
 
   const dailyBalances = calculateDailyBalances(monthlyTransactions);
 
-  const dateLabels = Object.keys(dailyBalances);
-  const expenceData = dateLabels.map((day) => dailyBalances[day].expense);
+  const dateLabels = Object.keys(dailyBalances).sort();
+  const expenseData = dateLabels.map((day) => dailyBalances[day].expense);
   const incomeData = dateLabels.map((day) => dailyBalances[day].income);
 
-  const labels = [
-    '2024-01-10',
-    '2024-01-11',
-    '2024-01-12',
-    '2024-01-13',
-    '2024-01-14',
-    '2024-01-15',
-    '2024-01-16'
-  ];
-
-  const data = {
-    labels,
+  const data: ChartData<"bar"> = {
+    labels: dateLabels,
     datasets: [
       {
         label: '支出',
-        data: [100, 200, 300, 400, 500, 600, 700],
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        data: expenseData,
+        backgroundColor: theme.palette.expenseColor.light,
       },
       {
         label: '収入',
-        data: [900, 800, 700, 600, 500, 400, 300],
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        data: incomeData,
+        backgroundColor: theme.palette.incomeColor.light,
       },
     ],
   };
-  return <Bar options={options} data={data} />;
+  return (
+    <Box>
+      { isLoading ? (
+        <CircularProgress />
+      ) :  monthlyTransactions.length > 0 ?(
+        <Bar options={options} data={data} />
+      ) : (
+        <Typography>データがありません</Typography>
+      )}
+    </Box>
+  );
 }
 
 export default BarChart

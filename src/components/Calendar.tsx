@@ -67,7 +67,6 @@ const Calendar = ({
   }
 
   const calendarEvents = createCalendarEvents(dailyBalances);
-  console.log(calendarEvents);
 
   const handleDateSet = (datesetInfo: DatesSetArg) => {
     const currentMonth = datesetInfo.view.currentStart;
@@ -79,7 +78,6 @@ const Calendar = ({
   }
 
   const handleDateClick = (dateInfo: DateClickArg) => {
-    console.log(dateInfo);
     setCurrentDay(dateInfo.dateStr);
   }
 

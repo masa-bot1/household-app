@@ -2,9 +2,13 @@ import {
   Box,
   Button,
   ButtonGroup,
+  FormControl,
+  FormHelperText,
   IconButton,
+  InputLabel,
   ListItemIcon,
   MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -90,7 +94,6 @@ const TransactionForm = ({
     },
     resolver: zodResolver(transactionSchema),
   });
-console.log(errors);
 
   const incomeExpenseToggle = (type: incomeExpenseType) => {
     setValue("type", type);
@@ -116,7 +119,6 @@ console.log(errors);
 
   // 送信処理
   const onSubmit: SubmitHandler<Schema> = (data) => {
-    console.log(data);
 
     if (selectedTransaction) {
       onUpdateTransaction(data, selectedTransaction.id)
@@ -270,13 +272,13 @@ console.log(errors);
             name="category"
             control={control}
             render={({field}) => (
-              <TextField
-                error={!!errors.category}
-                helperText={errors.category?.message}
+            <FormControl fullWidth error={!!errors.category}>
+              <InputLabel id="category-select-label">カテゴリ</InputLabel>
+              <Select
                 {...field}
-                id="カテゴリ"
+                labelId="category-select-label"
+                id="category-select"
                 label="カテゴリ"
-                select
               >
                 {categories.map((category) => (
                   <MenuItem value={category.label}>
@@ -284,7 +286,10 @@ console.log(errors);
                     {category.label}
                   </MenuItem>
                 ))}
-              </TextField>
+              </Select>
+              <FormHelperText>{errors.category?.message}</FormHelperText>
+            </FormControl>
+
             )}
           />
           {/* 金額 */}

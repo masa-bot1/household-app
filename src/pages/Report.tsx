@@ -36,7 +36,7 @@ const Report = ({
       <Grid size={{ xs: 12, md: 4 }}>
         <Paper sx={commonPaperStyle}>
           {/* 円グラフ */}
-          <CategoryChart />
+          <CategoryChart monthlyTransactions={monthlyTransactions} />
         </Paper>
       </Grid>
       <Grid size={{ xs: 12, md: 8 }}>

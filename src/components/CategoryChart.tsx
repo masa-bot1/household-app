@@ -2,16 +2,34 @@ import React, { useState } from 'react'
 import { Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { TransactionType } from '../types';
+import { ExpenseCategory, IncomeCategory, Transaction, TransactionType } from '../types';
+import { date } from 'zod';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CategoryChart = () => {
+interface CategoryChartProps {
+  monthlyTransactions: Transaction[];
+}
+
+const CategoryChart = ({ monthlyTransactions }: CategoryChartProps) => {
   const [selectedType, setSelectedType] = useState<TransactionType>("expense");
 
   const handleChange = (e: SelectChangeEvent<TransactionType>) => {
     setSelectedType(e.target.value as TransactionType);
   }
+
+  const categorySums = monthlyTransactions
+    .filter((transaction) => transaction.type === selectedType)
+    .reduce<Record<IncomeCategory | ExpenseCategory, number>>((acc, transaction) => {
+      if (!acc[transaction.category]) {
+        acc[transaction.category] = 0;
+      }
+
+      acc[transaction.category] += transaction.amount;
+      return acc;
+    }, {} as Record<IncomeCategory | ExpenseCategory, number>);
+
+  console.log(categorySums);
 
   const data = {
     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],

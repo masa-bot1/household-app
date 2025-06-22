@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from 'chart.js';
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { ExpenseCategory, IncomeCategory, Transaction, TransactionType } from '../types';
-import { date } from 'zod';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

@@ -38,9 +38,6 @@ const BarChart = ({
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
-      // legend: {
-      //   position: 'top' as const,
-      // },
       title: {
         display: true,
         text: '日別収支',
@@ -70,11 +67,12 @@ const BarChart = ({
     ],
   };
   return (
-    <Box sx={{
-      flexGrow: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+    <Box
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       { isLoading ? (

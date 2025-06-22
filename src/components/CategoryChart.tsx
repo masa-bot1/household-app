@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Pie } from 'react-chartjs-2'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from 'chart.js';
+import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import { ExpenseCategory, IncomeCategory, Transaction, TransactionType } from '../types';
 import { date } from 'zod';
 
@@ -9,9 +9,13 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface CategoryChartProps {
   monthlyTransactions: Transaction[];
+  isLoading: boolean;
 }
 
-const CategoryChart = ({ monthlyTransactions }: CategoryChartProps) => {
+const CategoryChart = ({
+  monthlyTransactions,
+  isLoading
+}: CategoryChartProps) => {
   const [selectedType, setSelectedType] = useState<TransactionType>("expense");
 
   const handleChange = (e: SelectChangeEvent<TransactionType>) => {
@@ -29,14 +33,22 @@ const CategoryChart = ({ monthlyTransactions }: CategoryChartProps) => {
       return acc;
     }, {} as Record<IncomeCategory | ExpenseCategory, number>);
 
-  console.log(categorySums);
+  const categoryLabels = Object.keys(categorySums);
+  const categoryValues = Object.values(categorySums);
 
-  const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  console.log(categoryLabels)
+  console.log(categoryValues)
+
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+  };
+
+  const data: ChartData<'pie'> = {
+    labels: categoryLabels,
     datasets: [
       {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
+        data: categoryValues,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -59,7 +71,7 @@ const CategoryChart = ({ monthlyTransactions }: CategoryChartProps) => {
   };
 
   return (
-    <Box>
+    <>
       <FormControl fullWidth>
         <InputLabel id="transaction-type-label">収支の種類</InputLabel>
         <Select
@@ -73,9 +85,23 @@ const CategoryChart = ({ monthlyTransactions }: CategoryChartProps) => {
           <MenuItem value={"expense"}>支出</MenuItem>
         </Select>
       </FormControl>
-
-      <Pie data={data} />
-    </Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        { isLoading ? (
+          <CircularProgress />
+        ) :  monthlyTransactions.length > 0 ?(
+          <Pie options={options} data={data} />
+        ) : (
+          <Typography>データがありません</Typography>
+        )}
+      </Box>
+    </>
   )
 }
 

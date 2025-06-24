@@ -33,7 +33,7 @@ const CategoryChart = ({
       return acc;
     }, {} as Record<IncomeCategory | ExpenseCategory, number>);
 
-  const categoryLabels = Object.keys(categorySums);
+  const categoryLabels = Object.keys(categorySums) as (IncomeCategory | ExpenseCategory)[];
   const categoryValues = Object.values(categorySums);
 
   console.log(categoryLabels)
@@ -59,27 +59,25 @@ const CategoryChart = ({
     "娯楽": theme.palette.expenseCategoryColor.娯楽,
   };
 
+  const getCategoryColor = (category: IncomeCategory | ExpenseCategory): string => {
+    if (selectedType === "income") {
+      return incomeCategoryColor[category as IncomeCategory];
+    } else {
+      return expenseCategoryColor[category as ExpenseCategory];
+    }
+  }
+
   const data: ChartData<'pie'> = {
     labels: categoryLabels,
     datasets: [
       {
         data: categoryValues,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
+        backgroundColor: categoryLabels.map((category) =>
+          getCategoryColor(category)
+        ),
+        borderColor: categoryLabels.map((category) =>
+          getCategoryColor(category)
+        ),
         borderWidth: 1,
       },
     ],

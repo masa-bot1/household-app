@@ -53,7 +53,7 @@ const Report = ({
       </Grid>
       <Grid size={{ xs: 12 }}>
         {/* テーブル */}
-        <TransactionTable />
+        <TransactionTable monthlyTransactions={monthlyTransactions} />
       </Grid>
     </Grid>
   )

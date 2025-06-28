@@ -164,7 +164,7 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
+        {/* {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
@@ -184,7 +184,11 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
               ) : null}
             </TableSortLabel>
           </TableCell>
-        ))}
+        ))} */}
+        <TableCell>日付</TableCell>
+        <TableCell>カテゴリ</TableCell>
+        <TableCell>金額</TableCell>
+        <TableCell>内容</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -225,19 +229,13 @@ function TransactionTableToolbar(props: TransactionTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          月の収支
         </Typography>
       )}
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -426,10 +424,9 @@ export default function TransactionTable({monthlyTransactions}: TransactionTable
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell>{row.calories}</TableCell>
+                    <TableCell>{row.fat}</TableCell>
+                    <TableCell>{row.carbs}</TableCell>
                   </TableRow>
                 );
               })}

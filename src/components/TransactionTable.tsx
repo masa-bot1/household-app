@@ -56,11 +56,12 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
 }
 interface TransactionTableToolbarProps {
   numSelected: number;
+  onDelete: () => void;
 }
 
 // ツールバー
 function TransactionTableToolbar(props: TransactionTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, onDelete } = props;
   return (
     <Toolbar
       sx={[
@@ -95,7 +96,7 @@ function TransactionTableToolbar(props: TransactionTableToolbarProps) {
       )}
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -133,10 +134,14 @@ function FinancialItem({title, value, color}: FinancialItemProps) {
 
 interface TransactionTableProps {
   monthlyTransactions: Transaction[];
+  onDeleteTransaction: (transactionId: string) => Promise<void>;
 }
 
 // 本体
-export default function TransactionTable({monthlyTransactions}: TransactionTableProps) {
+export default function TransactionTable({
+  monthlyTransactions,
+  onDeleteTransaction,
+}: TransactionTableProps) {
   const theme = useTheme();
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
@@ -177,6 +182,10 @@ export default function TransactionTable({monthlyTransactions}: TransactionTable
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleDelete = () => {
+    setSelected([]);
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -224,7 +233,10 @@ export default function TransactionTable({monthlyTransactions}: TransactionTable
         </Grid>
 
         {/* ツールバー */}
-        <TransactionTableToolbar numSelected={selected.length} />
+        <TransactionTableToolbar
+          numSelected={selected.length}
+          onDelete={handleDelete}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

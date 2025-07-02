@@ -89,10 +89,11 @@ function App() {
         await deleteDoc(doc(db, "Transactions", id));
       }
 
-      // const filteredTransactions = transactions.filter(
-      //   (transaction) => transaction.id !== transactionId
-      // );
-      // setTransactions(filteredTransactions);
+      const filteredTransactions = transactions.filter(
+        (transaction) => !idsToDelete.includes(transaction.id)
+      );
+
+      setTransactions(filteredTransactions);
     } catch (err) {
       if(isFirestoreError(err)) {
         console.log("firestoreのエラーは：", err);

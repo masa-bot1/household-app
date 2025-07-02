@@ -21,6 +21,7 @@ import { Grid } from '@mui/material';
 import { formatCurrency } from '../utils/formatting';
 import IconComponents from './common/IconComponents';
 import { compareDesc, parseISO } from 'date-fns';
+import { on } from 'events';
 
 interface TransactionTableHeadProps {
   numSelected: number;
@@ -134,7 +135,7 @@ function FinancialItem({title, value, color}: FinancialItemProps) {
 
 interface TransactionTableProps {
   monthlyTransactions: Transaction[];
-  onDeleteTransaction: (transactionId: string) => Promise<void>;
+  onDeleteTransaction: (transactionId: string | readonly string[]) => Promise<void>;
 }
 
 // 本体
@@ -185,6 +186,7 @@ export default function TransactionTable({
   };
 
   const handleDelete = () => {
+    onDeleteTransaction(selected);
     setSelected([]);
   };
 
